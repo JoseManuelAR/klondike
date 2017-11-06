@@ -13,20 +13,16 @@ TableauPile::TableauPile(std::uint8_t theIndex)
 
 void TableauPile::visit(FoundationDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
-  bool hangDown = true;
 
   assert(cards.size() == 1);
   assert(cards.top().isVisible());
   assert(this->cards.empty() || this->cards.top().isVisible());
 
-  if (not this->cards.empty()) {
-    hangDown = (static_cast<std::uint8_t>(this->cards.top().getNumber()) ==
-                static_cast<std::uint8_t>(cards.top().getNumber()) + 1) &&
-               (this->cards.top().getColor() != cards.top().getColor());
-  } else {
-    hangDown = (cards.top().getNumber() == Value::King);
-  }
-  if (hangDown) {
+  bool drop = (not this->cards.empty())
+                  ? canDropCard(cards.top())
+                  : (cards.top().getNumber() == Value::King);
+
+  if (drop) {
     this->cards.push(cards.top());
     draggedCards->acceptDrop();
   } else {
@@ -36,21 +32,23 @@ void TableauPile::visit(FoundationDraggedCards *draggedCards) {
 
 void TableauPile::visit(TableauDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
-  bool hangDown = true;
 
-  while (hangDown && not cards.empty()) {
+  assert(cards.size() > 0);
+  assert(cards.allVisibles());
+  assert(this->cards.empty() || this->cards.top().isVisible());
+
+  bool drop = true;
+  while (drop && not cards.empty()) {
     if (not this->cards.empty() && this->cards.top().isVisible()) {
-      hangDown = (static_cast<std::uint8_t>(this->cards.top().getNumber()) ==
-                  static_cast<std::uint8_t>(cards.top().getNumber()) + 1) &&
-                 (this->cards.top().getColor() != cards.top().getColor());
+      drop = canDropCard(cards.top());
     }
-    if (hangDown) {
+    if (drop) {
       cards.top().upTurned();
       this->cards.push(cards.top());
       cards.pop();
     }
   }
-  if (hangDown) {
+  if (drop) {
     draggedCards->acceptDrop();
   } else {
     draggedCards->rejectDrop();
@@ -59,20 +57,16 @@ void TableauPile::visit(TableauDraggedCards *draggedCards) {
 
 void TableauPile::visit(WasteDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
-  bool hangDown = true;
 
   assert(cards.size() == 1);
   assert(cards.top().isVisible());
   assert(this->cards.empty() || this->cards.top().isVisible());
 
-  if (not this->cards.empty()) {
-    hangDown = (static_cast<std::uint8_t>(this->cards.top().getNumber()) ==
-                static_cast<std::uint8_t>(cards.top().getNumber()) + 1) &&
-               (this->cards.top().getColor() != cards.top().getColor());
-  } else {
-    hangDown = (cards.top().getNumber() == Value::King);
-  }
-  if (hangDown) {
+  bool drop = (not this->cards.empty())
+                  ? canDropCard(cards.top())
+                  : (cards.top().getNumber() == Value::King);
+
+  if (drop) {
     this->cards.push(cards.top());
     draggedCards->acceptDrop();
   } else {
@@ -121,4 +115,10 @@ void TableauPile::acceptDrop() {
   if (not cards.empty() && not cards.top().isVisible()) {
     cards.top().upTurned();
   }
+}
+
+bool TableauPile::canDropCard(const Card &card) {
+  return (static_cast<std::uint8_t>(this->cards.top().getNumber()) ==
+          static_cast<std::uint8_t>(card.getNumber()) + 1) &&
+         (this->cards.top().getColor() != card.getColor());
 }

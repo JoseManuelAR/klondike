@@ -27,6 +27,8 @@ class TableauPile : public Pile, public DraggedCardsVisitor {
  private:
   constexpr static const char *PREFIX = "T";
   std::uint8_t index;
+
+  bool canDropCard(const Card &card);
 };
 
 #endif  //__TABLEAUPILE_HPP__

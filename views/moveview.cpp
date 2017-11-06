@@ -11,9 +11,7 @@
 void MoveView::interact(MoveController *moveController) {
   std::string movement;
   std::cout << "\33[K" << std::flush;
-  std::cout << "Enter a movement <origin> <destination> <number[default 1]> "
-               "(i.e: T1 T4 2, T2 F1):"
-            << std::flush;
+  std::cout << "Enter a movement:" << std::flush;
   std::getline(std::cin, movement);
   trim(movement);
   std::transform(movement.begin(), movement.end(), movement.begin(), ::toupper);

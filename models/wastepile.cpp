@@ -5,21 +5,21 @@
 #include "tableaudraggedcards.hpp"
 #include "wastedraggedcards.hpp"
 
-WastePile::WastePile() : Pile("W", false) {}
+WastePile::WastePile() : Pile(std::string(PREFIX), false) {}
 
-void WastePile::visit(FoundationDraggedCards* draggedCards) {
+void WastePile::visit(FoundationDraggedCards *draggedCards) {
   draggedCards->rejectDrop();
 }
 
-void WastePile::visit(TableauDraggedCards* draggedCards) {
+void WastePile::visit(TableauDraggedCards *draggedCards) {
   draggedCards->rejectDrop();
 }
 
-void WastePile::visit(WasteDraggedCards* draggedCards) {
+void WastePile::visit(WasteDraggedCards *draggedCards) {
   draggedCards->rejectDrop();
 }
 
-void WastePile::visit(DeckDraggedCards* draggedCards) {
+void WastePile::visit(DeckDraggedCards *draggedCards) {
   if (draggedCards->empty()) {
     Stack tmp;
     while (not this->cards.empty()) {
@@ -41,23 +41,23 @@ void WastePile::visit(DeckDraggedCards* draggedCards) {
   }
 }
 
-void WastePile::deal(Deck& deck) {}
+void WastePile::deal(Deck &deck) {}
 
-DraggedCards* WastePile::dragCards(std::uint32_t number) {
+DraggedCards *WastePile::dragCards(std::uint32_t number) {
   if (number != 1 || this->cards.empty()) {
     return nullptr;
   }
-  WasteDraggedCards* draggedCards = new WasteDraggedCards(this);
+  WasteDraggedCards *draggedCards = new WasteDraggedCards(this);
   draggedCards->push(this->cards.top());
   cards.pop();
   return draggedCards;
 }
 
-void WastePile::dropCards(DraggedCards* draggedCards) {
+void WastePile::dropCards(DraggedCards *draggedCards) {
   draggedCards->accept(this);
 }
 
-void WastePile::rejectDrop(DraggedCards* draggedCards) {
+void WastePile::rejectDrop(DraggedCards *draggedCards) {
   while (not draggedCards->empty()) {
     draggedCards->top().upTurned();
     cards.push(draggedCards->top());

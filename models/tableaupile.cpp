@@ -8,9 +8,10 @@
 #include <cassert>
 
 TableauPile::TableauPile(std::uint8_t theIndex)
-    : Pile("T" + std::to_string(theIndex), true), index(theIndex) {}
+    : Pile(std::string(PREFIX) + std::to_string(theIndex), true),
+      index(theIndex) {}
 
-void TableauPile::visit(FoundationDraggedCards* draggedCards) {
+void TableauPile::visit(FoundationDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
   bool hangDown = true;
 
@@ -33,7 +34,7 @@ void TableauPile::visit(FoundationDraggedCards* draggedCards) {
   }
 }
 
-void TableauPile::visit(TableauDraggedCards* draggedCards) {
+void TableauPile::visit(TableauDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
   bool hangDown = true;
 
@@ -56,7 +57,7 @@ void TableauPile::visit(TableauDraggedCards* draggedCards) {
   }
 }
 
-void TableauPile::visit(WasteDraggedCards* draggedCards) {
+void TableauPile::visit(WasteDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
   bool hangDown = true;
 
@@ -79,19 +80,19 @@ void TableauPile::visit(WasteDraggedCards* draggedCards) {
   }
 }
 
-void TableauPile::visit(DeckDraggedCards* draggedCards) {
+void TableauPile::visit(DeckDraggedCards *draggedCards) {
   draggedCards->rejectDrop();
 }
 
-void TableauPile::deal(Deck& deck) {
+void TableauPile::deal(Deck &deck) {
   for (std::uint8_t i = 0; i < index; ++i) {
     this->cards.push(deck.getCard());
   }
   this->cards.top().upTurned();
 }
 
-DraggedCards* TableauPile::dragCards(std::uint32_t number) {
-  TableauDraggedCards* draggedCards = new TableauDraggedCards(this);
+DraggedCards *TableauPile::dragCards(std::uint32_t number) {
+  TableauDraggedCards *draggedCards = new TableauDraggedCards(this);
   while (number > 0) {
     if (cards.empty() || not cards.top().isVisible()) {
       this->rejectDrop(draggedCards);
@@ -104,11 +105,11 @@ DraggedCards* TableauPile::dragCards(std::uint32_t number) {
   return draggedCards;
 }
 
-void TableauPile::dropCards(DraggedCards* draggedCards) {
+void TableauPile::dropCards(DraggedCards *draggedCards) {
   draggedCards->accept(this);
 }
 
-void TableauPile::rejectDrop(DraggedCards* draggedCards) {
+void TableauPile::rejectDrop(DraggedCards *draggedCards) {
   while (not draggedCards->empty()) {
     draggedCards->top().upTurned();
     cards.push(draggedCards->top());

@@ -6,13 +6,13 @@
 #include "wastedraggedcards.hpp"
 
 FoundationPile::FoundationPile(std::uint8_t theIndex)
-    : Pile("F" + std::to_string(theIndex), false) {}
+    : Pile(std::string(PREFIX) + std::to_string(theIndex), false) {}
 
-void FoundationPile::visit(FoundationDraggedCards* draggedCards) {
+void FoundationPile::visit(FoundationDraggedCards *draggedCards) {
   draggedCards->rejectDrop();
 }
 
-void FoundationPile::visit(TableauDraggedCards* draggedCards) {
+void FoundationPile::visit(TableauDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
 
   bool putUp = true;
@@ -41,7 +41,7 @@ void FoundationPile::visit(TableauDraggedCards* draggedCards) {
   }
 }
 
-void FoundationPile::visit(WasteDraggedCards* draggedCards) {
+void FoundationPile::visit(WasteDraggedCards *draggedCards) {
   Stack cards = draggedCards->getCards();
 
   bool putUp = true;
@@ -70,26 +70,26 @@ void FoundationPile::visit(WasteDraggedCards* draggedCards) {
   }
 }
 
-void FoundationPile::visit(DeckDraggedCards* draggedCards) {
+void FoundationPile::visit(DeckDraggedCards *draggedCards) {
   draggedCards->rejectDrop();
 }
 
-void FoundationPile::deal(Deck& deck) {}
+void FoundationPile::deal(Deck &deck) {}
 
-DraggedCards* FoundationPile::dragCards(std::uint32_t number) {
+DraggedCards *FoundationPile::dragCards(std::uint32_t number) {
   if (number != 1 || cards.empty()) {
     return nullptr;
   }
-  FoundationDraggedCards* draggedCards = new FoundationDraggedCards(this);
+  FoundationDraggedCards *draggedCards = new FoundationDraggedCards(this);
   draggedCards->push(cards.top());
   cards.pop();
   return draggedCards;
 }
 
-void FoundationPile::dropCards(DraggedCards* draggedCards) {
+void FoundationPile::dropCards(DraggedCards *draggedCards) {
   draggedCards->accept(this);
 }
 
-void FoundationPile::rejectDrop(DraggedCards* draggedCards) {}
+void FoundationPile::rejectDrop(DraggedCards *draggedCards) {}
 
 void FoundationPile::acceptDrop() {}

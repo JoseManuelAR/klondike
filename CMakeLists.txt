@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0.1)
 project (klondike)
 
 include_directories ("${PROJECT_SOURCE_DIR}")
+include_directories ("${PROJECT_SOURCE_DIR}/utils")
 include_directories ("${PROJECT_SOURCE_DIR}/models")
 include_directories ("${PROJECT_SOURCE_DIR}/controllers")
 include_directories ("${PROJECT_SOURCE_DIR}/views")

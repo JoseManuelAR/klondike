@@ -8,7 +8,6 @@
 
 enum class State : std::uint8_t { Start = 0, Move, End };
 
-class Area;
 class Pile;
 
 class Game {

@@ -9,18 +9,14 @@ class Deck;
 
 class Area {
  public:
-  Area(const std::string& theName);
+  Pile *getPile(const std::string &name) const { return piles.getPile(name); }
+  const PileList &getPileList() const { return piles; }
 
-  Pile* getPile(const std::string& name) const { return piles.getPile(name); }
-  const std::string& getName() const { return name; }
-  const PileList& getPileList() const { return piles; }
-
-  void deal(Deck& deck) { piles.deal(deck); }
+  void deal(Deck &deck) { piles.deal(deck); }
 
   bool won() const { return piles.won(); }
 
  protected:
-  const std::string name;
   PileList piles;
 };
 

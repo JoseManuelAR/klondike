@@ -2,7 +2,7 @@
 #include "deck.hpp"
 #include "foundationpile.hpp"
 
-Foundation::Foundation() : Area("Foundation") {
+Foundation::Foundation() : Area() {
   this->piles.add(new FoundationPile(this->piles.size() + 1));
   this->piles.add(new FoundationPile(this->piles.size() + 1));
   this->piles.add(new FoundationPile(this->piles.size() + 1));

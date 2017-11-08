@@ -16,6 +16,7 @@ class Stack {
       if (not tmp.top().isVisible()) {
         return false;
       }
+      tmp.pop();
     }
     return true;
   }

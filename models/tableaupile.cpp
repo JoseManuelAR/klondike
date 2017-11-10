@@ -39,9 +39,8 @@ void TableauPile::visit(TableauDraggedCards *draggedCards) {
 
   bool drop = true;
   while (drop && not cards.empty()) {
-    if (not this->cards.empty() && this->cards.top().isVisible()) {
-      drop = canDropCard(cards.top());
-    }
+    drop = (not this->cards.empty()) ? canDropCard(cards.top())
+                                     : (cards.top().getNumber() == Value::King);
     if (drop) {
       cards.top().upTurned();
       this->cards.push(cards.top());

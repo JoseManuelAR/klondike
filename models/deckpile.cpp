@@ -1,56 +1,48 @@
 #include "deckpile.hpp"
 #include "deck.hpp"
-#include "deckdraggedcards.hpp"
-#include "foundationdraggedcards.hpp"
-#include "tableaudraggedcards.hpp"
-#include "wastedraggedcards.hpp"
 
 DeckPile::DeckPile() : Pile(std::string(PREFIX), false) {}
 
-void DeckPile::visit(FoundationDraggedCards *draggedCards) {
-  draggedCards->rejectDrop();
+bool DeckPile::dragCards(const std::uint8_t numberOfCards, Stack &stack) {
+  stack.clean();
+  if (numberOfCards == 1 && not this->empty()) {
+    if (not this->top().isVisible()) {
+      stack.push(this->top());
+      this->pop();
+    }
+  }
+  return numberOfCards == stack.size();
 }
 
-void DeckPile::visit(TableauDraggedCards *draggedCards) {
-  draggedCards->rejectDrop();
+bool DeckPile::dropCards(const Stack &stack) { return false; }
+
+void DeckPile::acceptDragCards(){};
+
+void DeckPile::rejectDragCards(Stack &stack) {
+  while (not stack.empty()) {
+    this->push(stack.top());
+    stack.pop();
+  }
 }
 
-void DeckPile::visit(WasteDraggedCards *draggedCards) {
-  draggedCards->rejectDrop();
+bool DeckPile::canDragTo(const Pile *destinationPile) const {
+  return destinationPile->canDragFrom(this);
 }
 
-void DeckPile::visit(DeckDraggedCards *draggedCards) {
-  draggedCards->rejectDrop();
+bool DeckPile::canDragFrom(const PileVisitor *visitor) const {
+  return visitor->canDragTo(this);
 }
+
+bool DeckPile::canDragTo(const FoundationPile *pile) const { return false; }
+
+bool DeckPile::canDragTo(const TableauPile *pile) const { return false; }
+
+bool DeckPile::canDragTo(const WastePile *pile) const { return true; }
+
+bool DeckPile::canDragTo(const DeckPile *pile) const { return false; }
 
 void DeckPile::deal(Deck &deck) {
   while (not deck.empty()) {
     this->cards.push(deck.getCard());
   }
 }
-
-DraggedCards *DeckPile::dragCards(std::uint32_t number) {
-  if (number != 1) {
-    return nullptr;
-  }
-  DeckDraggedCards *draggedCards = new DeckDraggedCards(this);
-  if (not cards.empty()) {
-    draggedCards->push(cards.top());
-    cards.pop();
-  }
-  return draggedCards;
-}
-
-void DeckPile::dropCards(DraggedCards *draggedCards) {
-  draggedCards->accept(this);
-}
-
-void DeckPile::rejectDrop(DraggedCards *draggedCards) {
-  while (not draggedCards->empty()) {
-    draggedCards->top().downTurned();
-    cards.push(draggedCards->top());
-    draggedCards->pop();
-  }
-}
-
-void DeckPile::acceptDrop() {}

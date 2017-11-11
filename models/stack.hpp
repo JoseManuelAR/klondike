@@ -10,6 +10,12 @@ class Stack {
  public:
   Stack() : cards(){};
 
+  void clean() {
+    while (not cards.empty()) {
+      cards.pop();
+    }
+  }
+
   bool allVisibles() const {
     std::stack<Card> tmp = cards;
     while (not tmp.empty()) {

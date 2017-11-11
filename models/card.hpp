@@ -29,6 +29,18 @@ class Card {
   Card(Value theNumber, Suit theFigure)
       : number(theNumber), figure(theFigure), visible(false){};
 
+  bool isNext(const Card &theOther) const {
+    return (this->number != Value::Ace &&
+            (static_cast<std::uint8_t>(this->number)) ==
+                (static_cast<std::uint8_t>(theOther.number) + 1));
+  }
+
+  bool isPrevious(const Card &theOther) const {
+    return (this->number != Value::King &&
+            (static_cast<std::uint8_t>(this->number)) ==
+                (static_cast<std::uint8_t>(theOther.number) - 1));
+  }
+
   Color getColor() const {
     return (figure == Suit::Heart || figure == Suit::Diamond) ? Color::Red
                                                               : Color::Black;

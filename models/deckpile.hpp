@@ -1,26 +1,31 @@
 #ifndef __DECKPILE_HPP__
 #define __DECKPILE_HPP__
 
-#include "draggedcardsvisitor.hpp"
 #include "pile.hpp"
+#include "pilevisitor.hpp"
 
 class Deck;
 
-class DeckPile : public Pile, public DraggedCardsVisitor {
+class DeckPile : public Pile, public PileVisitor {
  public:
   DeckPile();
 
-  virtual void visit(FoundationDraggedCards *draggedCards) override;
-  virtual void visit(TableauDraggedCards *draggedCards) override;
-  virtual void visit(WasteDraggedCards *draggedCards) override;
-  virtual void visit(DeckDraggedCards *draggedCards) override;
+  virtual bool dragCards(const std::uint8_t numberOfCards,
+                         Stack &stack) override;
+  virtual bool dropCards(const Stack &stack) override;
+
+  virtual void acceptDragCards() override;
+  virtual void rejectDragCards(Stack &stack) override;
+
+  virtual bool canDragTo(const Pile *destinationPile) const override;
+  virtual bool canDragFrom(const PileVisitor *visitor) const override;
+
+  virtual bool canDragTo(const FoundationPile *pile) const override;
+  virtual bool canDragTo(const TableauPile *pile) const override;
+  virtual bool canDragTo(const WastePile *pile) const override;
+  virtual bool canDragTo(const DeckPile *pile) const override;
 
   virtual void deal(Deck &deck) override;
-  virtual DraggedCards *dragCards(std::uint32_t number) override;
-  virtual void dropCards(DraggedCards *draggedCards) override;
-
-  virtual void rejectDrop(DraggedCards *draggedCards) override;
-  virtual void acceptDrop() override;
 
   virtual bool won() const override { return cards.empty(); }
 

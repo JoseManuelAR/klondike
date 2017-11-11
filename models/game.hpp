@@ -9,13 +9,16 @@
 enum class State : std::uint8_t { Start = 0, Move, End };
 
 class Pile;
+class WastePile;
+class DeckPile;
 
 class Game {
  public:
   Game();
 
   void start();
-  void move(std::string origin, std::string destination, std::uint32_t number);
+  void move(std::string origin, std::string destination,
+            std::uint8_t numberOfCards);
   bool won() const { return this->piles.won(); }
 
   const State &getState() const { return state; }
@@ -29,6 +32,8 @@ class Game {
   constexpr static std::uint8_t FOUNDATION_PILES = 4;
   constexpr static std::uint8_t TABLEAU_PILES = 7;
   PileList piles;
+  WastePile *wastePile;
+  DeckPile *deckPile;
 
   void createPiles();
 };

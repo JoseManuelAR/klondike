@@ -7,22 +7,32 @@
 
 class Deck;
 class DraggedCards;
+class PileVisitor;
 
 class Pile {
  public:
-  Pile(const std::string& theName, bool theExtended);
+  Pile(const std::string &theName, bool theExtended);
 
-  virtual void deal(Deck& deck) = 0;
-  virtual DraggedCards* dragCards(std::uint32_t number) = 0;
-  virtual void dropCards(DraggedCards* draggedCards) = 0;
+  virtual bool dragCards(const std::uint8_t numberOfCards, Stack &stack) = 0;
+  virtual bool dropCards(const Stack &stack) = 0;
 
-  virtual void rejectDrop(DraggedCards* draggedCards) = 0;
-  virtual void acceptDrop() = 0;
+  virtual void acceptDragCards() = 0;
+  virtual void rejectDragCards(Stack &stack) = 0;
 
-  const std::string& getName() const { return name; }
-  const Stack& getCards() const { return cards; }
+  virtual bool canDragTo(const Pile *destinationPile) const = 0;
+  virtual bool canDragFrom(const PileVisitor *visitor) const = 0;
+
+  virtual void deal(Deck &deck) = 0;
+
+  const std::string &getName() const { return name; }
+  const Stack &getCards() const { return cards; }
   bool isExtended() const { return extended; }
 
+  void push(Card card) { cards.push(card); }
+  void pop() { cards.pop(); }
+  const Card &top() const { return cards.top(); }
+  Card &top() { return cards.top(); }
+  bool empty() const { return cards.empty(); };
   std::size_t size() const { return cards.size(); };
 
   virtual bool won() const = 0;

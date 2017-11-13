@@ -6,28 +6,28 @@ FoundationPile::FoundationPile(std::uint8_t theIndex)
 
 bool FoundationPile::dragCards(const std::uint8_t numberOfCards, Stack &stack) {
   stack.clean();
-  if (numberOfCards == 1 && not this->empty()) {
-    if (this->top().isVisible()) {
-      stack.push(this->top());
-      this->pop();
-    }
+  if (numberOfCards == 1) {
+    return this->dragCard(stack);
   }
-  return numberOfCards == stack.size();
+  return false;
+}
+
+bool FoundationPile::dragCard(Stack &stack) {
+  if (not this->empty() && this->top().isVisible()) {
+    stack.push(this->top());
+    this->pop();
+    return true;
+  }
+  return false;
 }
 
 bool FoundationPile::dropCards(const Stack &stack) {
   if (stack.size() == 1) {
-    if (this->empty()) {
-      if (stack.top().getNumber() == Value::Ace) {
-        this->push(stack.top());
-        return true;
-      }
-    } else {
-      if (this->top().getFigure() == stack.top().getFigure() &&
-          this->top().isPrevious(stack.top())) {
-        this->push(stack.top());
-        return true;
-      }
+    if ((this->empty() && stack.top().getNumber() == Value::Ace) ||
+        (this->top().getFigure() == stack.top().getFigure() &&
+         this->top().isPrevious(stack.top()))) {
+      this->push(stack.top());
+      return true;
     }
   }
   return false;

@@ -7,18 +7,20 @@ TableauPile::TableauPile(std::uint8_t theIndex)
 
 bool TableauPile::dragCards(const std::uint8_t numberOfCards, Stack &stack) {
   stack.clean();
-
   std::uint8_t n = numberOfCards;
-  while (n > 0 && not this->empty()) {
-    if (this->top().isVisible()) {
-      stack.push(this->top());
-      this->pop();
-      n--;
-    } else {
-      n = 0;
-    }
+  while (n > 0) {
+    n = this->dragCard(stack) ? (n - 1) : 0;
   }
   return numberOfCards == stack.size();
+}
+
+bool TableauPile::dragCard(Stack &stack) {
+  if (not this->empty() && this->top().isVisible()) {
+    stack.push(this->top());
+    this->pop();
+    return true;
+  }
+  return false;
 }
 
 bool TableauPile::dropCards(const Stack &stack) {
@@ -26,19 +28,12 @@ bool TableauPile::dropCards(const Stack &stack) {
   bool ok = true;
   while (not localStack.empty() && ok) {
     ok = false;
-    if (this->empty()) {
-      if (localStack.top().getNumber() == Value::King) {
-        this->push(localStack.top());
-        localStack.pop();
-        ok = true;
-      }
-    } else {
-      if (this->top().getColor() != localStack.top().getColor() &&
-          this->top().isNext(localStack.top())) {
-        this->push(localStack.top());
-        localStack.pop();
-        ok = true;
-      }
+    if ((this->empty() && localStack.top().getNumber() == Value::King) ||
+        (this->top().getColor() != localStack.top().getColor() &&
+         this->top().isNext(localStack.top()))) {
+      this->push(localStack.top());
+      localStack.pop();
+      ok = true;
     }
   }
   return ok;

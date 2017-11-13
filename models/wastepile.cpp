@@ -5,13 +5,19 @@ WastePile::WastePile() : Pile(std::string(PREFIX), false) {}
 
 bool WastePile::dragCards(const std::uint8_t numberOfCards, Stack &stack) {
   stack.clean();
-  if (numberOfCards == 1 && not this->empty()) {
-    if (this->top().isVisible()) {
-      stack.push(this->top());
-      this->pop();
-    }
+  if (numberOfCards == 1) {
+    return this->dragCard(stack);
   }
-  return numberOfCards == stack.size();
+  return false;
+}
+
+bool WastePile::dragCard(Stack &stack) {
+  if (not this->empty() && this->top().isVisible()) {
+    stack.push(this->top());
+    this->pop();
+    return true;
+  }
+  return false;
 }
 
 bool WastePile::dropCards(const Stack &stack) {

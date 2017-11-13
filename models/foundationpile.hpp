@@ -12,6 +12,7 @@ class FoundationPile : public Pile, public PileVisitor {
 
   virtual bool dragCards(const std::uint8_t numberOfCards,
                          Stack &stack) override;
+  virtual bool dragCard(Stack &stack) override;
   virtual bool dropCards(const Stack &stack) override;
 
   virtual void acceptDragCards() override;

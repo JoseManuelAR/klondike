@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "deck.hpp"
+#include "movement.hpp"
 
 #include "deckpile.hpp"
 #include "foundationpile.hpp"
@@ -13,35 +14,21 @@ Game::Game()
 
 void Game::start() {
   createPiles();
-
-  Deck deck;
-  deck.shuffle();
-  this->piles.deal(deck);
+  dealCards();
+  state = State::Move;
 }
 
-void Game::move(std::string origin, std::string destination,
-                std::uint8_t numberOfCards) {
-  Pile *originPile = this->piles.getPile(origin);
-  Pile *destinationPile = this->piles.getPile(destination);
-  if (originPile != nullptr && destinationPile != nullptr) {
-    Stack cards;
-    if (originPile->canDragTo(destinationPile) &&
-        originPile->dragCards(numberOfCards, cards) &&
-        destinationPile->dropCards(cards)) {
-      originPile->acceptDragCards();
-    } else {
-      if (numberOfCards == 1 && originPile == deckPile &&
-          destinationPile == wastePile) {
-        while (not wastePile->empty()) {
-          deckPile->push(wastePile->top());
-          deckPile->top().downTurned();
-          wastePile->pop();
-        }
-      } else {
-        originPile->rejectDragCards(cards);
-      }
+void Game::move(const Movement &movement) {
+  movement.update(this->piles);
+  if (movement.getOriginPile() == deckPile &&
+      movement.getDestinationPile() == wastePile) {
+    if (not movement.flip()) {
+      this->moveWasteToDeck();
     }
+  } else {
+    movement.execute();
   }
+  state = this->won() ? State::End : State::Move;
 }
 
 void Game::createPiles() {
@@ -55,4 +42,18 @@ void Game::createPiles() {
   this->piles.add(wastePile);
   deckPile = new DeckPile();
   this->piles.add(deckPile);
+}
+
+void Game::dealCards() {
+  Deck deck;
+  deck.shuffle();
+  this->piles.deal(deck);
+}
+
+void Game::moveWasteToDeck() {
+  while (not wastePile->empty()) {
+    deckPile->push(wastePile->top());
+    deckPile->top().downTurned();
+    wastePile->pop();
+  }
 }

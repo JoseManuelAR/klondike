@@ -8,7 +8,7 @@
 
 enum class State : std::uint8_t { Start = 0, Move, End };
 
-class Pile;
+class Movement;
 class WastePile;
 class DeckPile;
 
@@ -17,12 +17,9 @@ class Game {
   Game();
 
   void start();
-  void move(std::string origin, std::string destination,
-            std::uint8_t numberOfCards);
+  void move(const Movement &movement);
   bool won() const { return this->piles.won(); }
-
   const State &getState() const { return state; }
-  void setState(const State &theState) { state = theState; }
 
   const PileList &getPileList() const { return piles; }
 
@@ -36,6 +33,8 @@ class Game {
   DeckPile *deckPile;
 
   void createPiles();
+  void dealCards();
+  void moveWasteToDeck();
 };
 
 #endif  //__GAME_HPP__

@@ -9,32 +9,21 @@ class ControllerVisitor;
 
 class Controller {
  public:
-  Controller(Game& theGame) : game(theGame) {}
+  Controller(Game &theGame) : game(theGame) {}
   virtual ~Controller() = default;
 
-  virtual void accept(ControllerVisitor* visitor) = 0;
+  virtual void accept(ControllerVisitor *visitor) = 0;
 
-  virtual void start() {
-    game.start();
-    game.setState(State::Move);
-  }
+  virtual void start() { game.start(); }
 
-  virtual void move(std::string origin, std::string destination,
-                    std::uint8_t number) {
-    game.move(origin, destination, number);
-    if (game.won()) {
-      game.setState(State::End);
-    } else {
-      game.setState(State::Move);
-    }
-  }
+  virtual void move(const Movement &movement) { game.move(movement); }
 
   bool won() const { return game.won(); }
 
-  const Game& getGame() const { return game; }
+  const Game &getGame() const { return game; }
 
  private:
-  Game& game;
+  Game &game;
 };
 
 #endif  //__CONTROLLER_HPP__

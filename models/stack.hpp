@@ -16,17 +16,6 @@ class Stack {
     }
   }
 
-  bool allVisibles() const {
-    std::stack<Card> tmp = cards;
-    while (not tmp.empty()) {
-      if (not tmp.top().isVisible()) {
-        return false;
-      }
-      tmp.pop();
-    }
-    return true;
-  }
-
   void push(Card card) { cards.push(card); }
   void pop() { cards.pop(); }
   const Card &top() const { return cards.top(); }

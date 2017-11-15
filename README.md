@@ -6,20 +6,20 @@ To run the program execute the run.sh script
 
 Playing:
 
-F1:<>
-F2:<>
-F3:<>
-F4:<>
-T1:J♦
-T2:A♠ XX
-T3:8♣ XX XX
-T4:Q♥ XX XX XX
-T5:3♥ XX XX XX XX
-T6:2♦ XX XX XX XX XX
-T7:K♦ XX XX XX XX XX XX
-W:<>
-D:[24] XX
-Enter a movement:
+F1:<><br />
+F2:<><br />
+F3:<><br />
+F4:<><br />
+T1:J♦<br />
+T2:A♠ XX<br />
+T3:8♣ XX XX<br />
+T4:Q♥ XX XX XX<br />
+T5:3♥ XX XX XX XX<br />
+T6:2♦ XX XX XX XX XX<br />
+T7:K♦ XX XX XX XX XX XX<br />
+W:<><br />
+D:[24] XX<br />
+Enter a movement:<br />
 
 You can indicate movements with this sintax:
 

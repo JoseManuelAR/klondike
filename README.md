@@ -21,7 +21,7 @@ D:[24] XX<br />
 Enter a movement:<br />
 <br />
 You can indicate movements with this sintax:<br />
-<ORIGIN> <DESTINATION> <NUMBEROFCARDS [default = 1]><br />
+\langle ORIGIN> <DESTINATION> <NUMBEROFCARDS [default = 1]><br />
 <br />
 i.e.:<br />
 T2 F1 --> Move 1 card from 2nd tableau (T2) to 1st foundation (F1)<br />

@@ -6,11 +6,11 @@
 
 bool Movement::flip() const {
   if (originPile != nullptr && destinationPile != nullptr) {
-    Stack cards;
-    if (originPile->canDragTo(destinationPile) &&
-        originPile->dragCards(numberOfCards, cards) &&
-        destinationPile->dropCards(cards)) {
-      return true;
+    if (originPile->canDragTo(destinationPile)) {
+      Stack *cards = originPile->dragCards(numberOfCards);
+      if (cards != nullptr && destinationPile->dropCards(cards)) {
+        return true;
+      }
     }
   }
   return false;
@@ -18,13 +18,15 @@ bool Movement::flip() const {
 
 void Movement::execute() const {
   if (originPile != nullptr && destinationPile != nullptr) {
-    Stack cards;
-    if (originPile->canDragTo(destinationPile) &&
-        originPile->dragCards(numberOfCards, cards) &&
-        destinationPile->dropCards(cards)) {
-      originPile->acceptDragCards();
-    } else {
-      originPile->rejectDragCards(cards);
+    if (originPile->canDragTo(destinationPile)) {
+      Stack *cards = originPile->dragCards(numberOfCards);
+      if (cards != nullptr) {
+        if (destinationPile->dropCards(cards)) {
+          originPile->acceptDragCards();
+        } else {
+          originPile->rejectDragCards(cards);
+        }
+      }
     }
   }
 }

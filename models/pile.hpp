@@ -13,12 +13,11 @@ class Pile {
  public:
   Pile(const std::string &theName, bool theExtended);
 
-  virtual bool dragCards(const std::uint8_t numberOfCards, Stack &stack) = 0;
-  virtual bool dragCard(Stack &stack) = 0;
-  virtual bool dropCards(const Stack &stack) = 0;
+  virtual Stack *dragCards(const std::uint8_t numberOfCards) = 0;
+  virtual bool dropCards(const Stack *stack) = 0;
 
   virtual void acceptDragCards() = 0;
-  virtual void rejectDragCards(Stack &stack) = 0;
+  virtual void rejectDragCards(Stack *stack) = 0;
 
   virtual bool canDragTo(const Pile *destinationPile) const = 0;
   virtual bool canDragFrom(const PileVisitor *visitor) const = 0;

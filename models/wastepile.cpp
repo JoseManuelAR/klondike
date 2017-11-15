@@ -3,26 +3,19 @@
 
 WastePile::WastePile() : Pile(std::string(PREFIX), false) {}
 
-bool WastePile::dragCards(const std::uint8_t numberOfCards, Stack &stack) {
-  stack.clean();
-  if (numberOfCards == 1) {
-    return this->dragCard(stack);
-  }
-  return false;
-}
-
-bool WastePile::dragCard(Stack &stack) {
-  if (not this->empty() && this->top().isVisible()) {
-    stack.push(this->top());
+Stack *WastePile::dragCards(const std::uint8_t numberOfCards) {
+  Stack *stack = nullptr;
+  if (numberOfCards == 1 && not this->empty() && this->top().isVisible()) {
+    stack = new Stack();
+    stack->push(this->top());
     this->pop();
-    return true;
   }
-  return false;
+  return stack;
 }
 
-bool WastePile::dropCards(const Stack &stack) {
-  if (stack.size() == 1) {
-    this->push(stack.top());
+bool WastePile::dropCards(const Stack *stack) {
+  if (stack != nullptr && stack->size() == 1) {
+    this->push(stack->top());
     this->top().upTurned();
     return true;
   }
@@ -31,10 +24,12 @@ bool WastePile::dropCards(const Stack &stack) {
 
 void WastePile::acceptDragCards(){};
 
-void WastePile::rejectDragCards(Stack &stack) {
-  while (not stack.empty()) {
-    this->push(stack.top());
-    stack.pop();
+void WastePile::rejectDragCards(Stack *stack) {
+  if (stack != nullptr) {
+    while (not stack->empty()) {
+      this->push(stack->top());
+      stack->pop();
+    }
   }
 }
 

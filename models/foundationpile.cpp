@@ -4,29 +4,23 @@
 FoundationPile::FoundationPile(std::uint8_t theIndex)
     : Pile(std::string(PREFIX) + std::to_string(theIndex), false) {}
 
-bool FoundationPile::dragCards(const std::uint8_t numberOfCards, Stack &stack) {
-  stack.clean();
-  if (numberOfCards == 1) {
-    return this->dragCard(stack);
-  }
-  return false;
-}
-
-bool FoundationPile::dragCard(Stack &stack) {
-  if (not this->empty() && this->top().isVisible()) {
-    stack.push(this->top());
+Stack *FoundationPile::dragCards(const std::uint8_t numberOfCards) {
+  Stack *stack = nullptr;
+  if (numberOfCards == 1 && not this->empty() && this->top().isVisible()) {
+    stack = new Stack();
+    stack->push(this->top());
     this->pop();
-    return true;
   }
-  return false;
+  return stack;
 }
 
-bool FoundationPile::dropCards(const Stack &stack) {
-  if (stack.size() == 1) {
-    if ((this->empty() && stack.top().getNumber() == Value::Ace) ||
-        (this->top().getFigure() == stack.top().getFigure() &&
-         this->top().isPrevious(stack.top()))) {
-      this->push(stack.top());
+bool FoundationPile::dropCards(const Stack *stack) {
+  if (stack != nullptr && stack->size() == 1) {
+    if ((this->empty() && stack->top().getNumber() == Value::Ace) ||
+        (this->top().getFigure() == stack->top().getFigure() &&
+         this->top().isPrevious(stack->top()))) {
+      this->push(stack->top());
+      this->top().upTurned();
       return true;
     }
   }
@@ -35,10 +29,12 @@ bool FoundationPile::dropCards(const Stack &stack) {
 
 void FoundationPile::acceptDragCards(){};
 
-void FoundationPile::rejectDragCards(Stack &stack) {
-  while (not stack.empty()) {
-    this->push(stack.top());
-    stack.pop();
+void FoundationPile::rejectDragCards(Stack *stack) {
+  if (stack != nullptr) {
+    while (not stack->empty()) {
+      this->push(stack->top());
+      stack->pop();
+    }
   }
 }
 

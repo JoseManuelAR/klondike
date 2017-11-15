@@ -10,13 +10,11 @@ class WastePile : public Pile, public PileVisitor {
  public:
   WastePile();
 
-  virtual bool dragCards(const std::uint8_t numberOfCards,
-                         Stack &stack) override;
-  virtual bool dragCard(Stack &stack) override;
-  virtual bool dropCards(const Stack &stack) override;
+  virtual Stack *dragCards(const std::uint8_t numberOfCards) override;
+  virtual bool dropCards(const Stack *stack) override;
 
   virtual void acceptDragCards() override;
-  virtual void rejectDragCards(Stack &stack) override;
+  virtual void rejectDragCards(Stack *stack) override;
 
   virtual bool canDragTo(const Pile *destinationPile) const override;
   virtual bool canDragFrom(const PileVisitor *visitor) const override;

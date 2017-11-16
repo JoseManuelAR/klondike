@@ -1,3 +1,5 @@
 #include "windialog.hpp"
 
-void WinDialog::show() const {}
+#include <iostream>
+
+void WinDialog::show() const { std::cout << "You win!!!!" << std::endl; }
